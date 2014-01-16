@@ -1,6 +1,4 @@
---  display("monitorname",filetype,textsize)
-
--- API made by MayContainVennom.
+-- API made by MayContainVennom. Help information can be found at: http://goo.gl/rfpqJ8
 
 function reset(monitorID)
 	m = peripheral.wrap(monitorID)
@@ -16,7 +14,7 @@ function text(monitorID,fileID,textSize)
 
   m = peripheral.wrap(monitorID)
 
-  if fs.exists(whatFileText(fileID)) then
+  if fs.exists(fileID) then
 
     m.clear()
 
@@ -28,7 +26,7 @@ function text(monitorID,fileID,textSize)
 
     term.redirect(m)
 
-    f = fs.open(whatFileText(fileID), "r")
+    f = fs.open(fileID, "r")
 
     print(f.readAll())
 
@@ -40,10 +38,7 @@ function text(monitorID,fileID,textSize)
 
    else
 
-     print("Disk not found checking again in 5 seconds.")
-
-     sleep(5)
-
+     error("Disk not found.")
    end
 
 end
@@ -58,44 +53,24 @@ function paint(monitorID,fileID)
 
   if fs.exists(fileID) then
 
-   m.clear()
+  	m.clear()
 
-   image = paintutils.loadImage(fileID)
+  	image = paintutils.loadImage(fileID)
 
-   term.redirect(m)
+  	term.redirect(m)
 
-   paintutils.drawImage(image,1,1)
+   	paintutils.drawImage(image,1,1)
 
-   term.restore()
+   	term.restore()
 
-   sleep(1)
+   	sleep(1)
 
+  else 
+  	error("File not found") 
   end
 
 end
 
-
-
-
-
-
-function whatFileText(type)
-
-  if type == 1 then
-
-    return "disk/screen1"
-
-  elseif type == 2 then
-
-    return "disk/screen2"
-
-  elseif type == 3 then
-
-    return "disk/screen3"
-
-  end  
-
-end
 
 function time(monitorID,textSize,timeZone)
   if timeZone == "GMT" then
@@ -103,7 +78,7 @@ function time(monitorID,textSize,timeZone)
 		reset(monitorID)
 		mon.setTextScale(textSize)
 		mon.setCursorPos(1,2)
-		mon.write("Vennom:")
+		mon.write("GMT:")
 		mon.setCursorPos(5,3)
 		time = string.sub(http.get("http://www.timeapi.org/gmt/now?format=%20%25T").readAll(),1,6)
 		mon.write(time)
@@ -118,7 +93,7 @@ function time(monitorID,textSize,timeZone)
 		reset(monitorID)
 		mon.setTextScale(textSize)
 		mon.setCursorPos(1,2)
-		mon.write("Duck:")
+		mon.write("EST:")
 		mon.setCursorPos(5,3)
 		time = string.sub(http.get("http://www.timeapi.org/EST/now?format=%20%25T").readAll(),1,6)
 		mon.write(time)
@@ -128,6 +103,8 @@ function time(monitorID,textSize,timeZone)
 		mon.setCursorPos(2,6)
 		date = string.sub(http.get("http://www.timeapi.org/utc/now?\%20%25D").readAll(),2,9)
 		mon.write(date)
+	else
+		error("No monitor found by that ID")
 	end
 end
 
